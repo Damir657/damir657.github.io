@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HillPark | Damir Ashinov</title>
+<meta name="description" content="HillPark: a Java/Vaadin web app that tells a University of Arkansas student where to park for their class schedule, using Google OR-Tools and SMILE.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%239d2235'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'%3EDA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html"><span class="brand-mark">DA</span>Damir Ashinov</a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="index.html#traffic">Traffic</a><a href="index.html#projects">Projects</a><a href="index.html#experience">Experience</a>
+      <a class="nav-cta" href="assets/Damir-Ashinov-Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <section class="page-hero">
+    <a class="back" href="index.html#projects">← All projects</a>
+    <h1 class="page-title">HillPark</h1>
+    <ul class="facts"><li>INEG 22203 Computing Methods II</li><li>Fall 2026</li><li>Team: Ryan Allen, Damir Ashinov, Sam Brown</li><li>Java 21 · Vaadin 24 · OR-Tools · SMILE · Tablesaw</li></ul>
+  </section>
+  <article class="prose">
+    <p class="lede">UARK parking that fits your class schedule. Enter your permit and your classes, and HillPark ranks the lots you're allowed to use by walking time, driving time and traffic, then plans your whole week.</p>
+    <p class="callout"><b>My part:</b> the data HillPark runs on. I built the dataset of 110 lots and garages with their permit rules, and the traffic logger whose readings train HillPark's forecast. Ryan led the application code.</p>
+    <figure><img src="assets/hillpark-plan.jpg" alt="HillPark's week plan: a tab per class day, a campus map with the walking route, and ranked lot cards" loading="lazy"><figcaption>A week's plan: one tab per class day, the walking route from the best lot, and ranked alternatives.</figcaption></figure>
+
+    <h2>The problem</h2>
+    <p>The university sells about 21,000 car permits for roughly 14,600 spaces. Picking the wrong lot means circling, a long walk across campus, or sitting in traffic on Razorback Road. HillPark turns the question "where should I park?" into one clear answer per class day.</p>
+
+    <h2>Picking lots for the week with OR-Tools</h2>
+    <p>Parking in one lot all week is simple, but two lots can be much better if your Tuesday and Thursday classes are across campus. HillPark solves a small integer program to choose the best one to three lots:</p>
+    <div class="formula">minimize   Σ c[d][l] · x[d][l]          total score for the week
+subject to Σ x[d][l] = 1   for each day     park somewhere each class day
+           x[d][l] ≤ y[l]                 only in lots you picked
+           Σ y[l] ≤ K                      at most K lots</div>
+    <p>It's the p-median facility-location model, with class days as customers and lots as facilities, solved with SCIP and checked against brute force in the tests. In the example week, two lots beat one by 16%.</p>
+    <figure><img src="assets/hillpark-your-week.jpg" alt="The Your week tab comparing one, two and three lots" loading="lazy"><figcaption>The "Your week" tab compares one, two and three lots.</figcaption></figure>
+
+    <h2>Forecasting traffic with SMILE</h2>
+    <p>HillPark predicts how slow each road into campus will be from its location, road type, normal speed, day of week and time of day. Random forest and gradient boosting models are trained on the TomTom log and tested on the newest 20% of readings, days the models never saw.</p>
+    <p>Gradient boosting scored R² = 0.51 and random forest 0.50, against 0.32 for plain half-hour averages.</p>
+    <figure><img src="assets/hillpark-model-check.jpg" alt="Model check: gradient boosting, random forest and averages on held-out data" loading="lazy"><figcaption>Held-out check: both machine-learning models beat simple averages.</figcaption></figure>
+
+    <h2>Real permit rules and park &amp; ride</h2>
+    <p>HillPark only suggests lots your permit allows, following the 2026–27 Transit &amp; Parking rules. It also finds the latest Razorback Transit bus from the Economy lot that gets you to your first class on time, and compares it with driving.</p>
+    <figure><img src="assets/hillpark-park-and-ride-map.jpg" alt="Park and ride from Lot 500 on the Route 500 Express" loading="lazy"><figcaption>Park &amp; ride: Lot 500, the Route 500 Express, and the walk to class.</figcaption></figure>
+  </article>
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div><p class="foot-name">Damir Ashinov</p><p class="fine">HillPark is a student project, not an official University of Arkansas tool.</p></div>
+    <div class="foot-links">
+      <a class="icon-btn" href="https://www.linkedin.com/in/da0504" target="_blank" rel="noopener" aria-label="LinkedIn profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+      <a class="icon-btn" href="mailto:dashinov@uark.edu" aria-label="Email dashinov@uark.edu"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13A1.5 1.5 0 0 1 3.5 4zm.7 2L12 11.6 19.8 6H4.2zM20 7.7l-7.42 5.3a1 1 0 0 1-1.16 0L4 7.7V18h16V7.7z"/></svg></a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

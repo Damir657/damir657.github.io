@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Parking Permit Model | Damir Ashinov</title>
+<meta name="description" content="An operations research model for zone-based parking permit allocation at the University of Arkansas, built on a 110-lot dataset and live traffic data.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%239d2235'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'%3EDA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html"><span class="brand-mark">DA</span>Damir Ashinov</a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="index.html#traffic">Traffic</a><a href="index.html#projects">Projects</a><a href="index.html#experience">Experience</a>
+      <a class="nav-cta" href="assets/Damir-Ashinov-Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <section class="page-hero">
+    <a class="back" href="index.html#projects">← All projects</a>
+    <h1 class="page-title">Campus parking permit model</h1>
+    <ul class="facts"><li>INEG 26103 Introduction to Operations Research</li><li>Fall 2026</li><li>Team: Ryan Allen, Damir Ashinov</li><li>Mixed-integer programming · AMPL / CPLEX</li></ul>
+  </section>
+  <article class="prose">
+    <p class="lede">The University of Arkansas sells about 1.44 car permits for every parking space. We're building a model that decides which permit types each lot should serve, and where each group of drivers should park, to cut walking without sending everyone down the same road.</p>
+    <p class="callout"><b>My part:</b> the dataset. I mapped all 110 lots and 4 garages, estimated each lot's spaces, collected the traffic data, built the interactive campus map, and handled the data requests to Transit &amp; Parking. Ryan and I share the model.</p>
+    <figure><img src="assets/campus-map.jpg" alt="Interactive campus map with every lot shaded in UARK's permit colors" loading="lazy"><figcaption>The interactive campus map I built: 110 lots and 4 garages in UARK's official permit colors, plus walking and driving routes.</figcaption></figure>
+
+    <h2>Why it matters</h2>
+    <p>Campus has 14,632 parking spaces. In a 2024 campus survey with more than 5,000 responses, 87.4% of people said they were unsatisfied with parking, and the top complaints were congestion and the walk from parking to class. The university has said it's considering zone-based permits. Our model asks what the best zones would be.</p>
+
+    <h2>The model</h2>
+    <ul>
+      <li><b>Decisions:</b> which permit type each lot serves (Commuter, Faculty/Staff or Economy; Resident and Reserved lots stay fixed), and how many people from each group park in each lot.</li>
+      <li><b>Objective:</b> minimize total weighted walking distance from lots to buildings.</li>
+      <li><b>Constraints:</b> everyone gets a place to park; no lot is overfilled, allowing for the fact that not every permit holder is on campus at once; people only park where their permit allows; one permit type per lot.</li>
+      <li><b>Extension:</b> a rush-hour capacity limit on each access road, so the model can't shorten walks by creating a traffic jam.</li>
+    </ul>
+
+    <h2>Building the dataset</h2>
+    <p>No one publishes how many spaces each lot has, so we built it. I pulled the outline and permit rules of every lot from the university's campus map data, estimated spaces from paved area, and calibrated the estimates so the surface lots add up to the official 10,181. The garages hold 4,451 more, from the university's 2023 garage study.</p>
+    <p>Cross-checking against the printed parking map settled 8 lots we couldn't read and turned up 37 lots our first inventory had missed.</p>
+    <p>For traffic, I collected 40 years of daily counts from 103 ArDOT stations around campus and set up the logger that records live road speeds every 30 minutes. It's the same data behind the map on <a href="index.html#traffic">my homepage</a>.</p>
+
+    <h2>Status</h2>
+    <p>The model was approved at the October milestone. Next come the experiments: today's layout against the optimized one, a tradeoff between student and faculty walking, sensitivity to the space estimates, and a what-if for the planned 1,700-space Razorback Road garage. Results arrive in December.</p>
+  </article>
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div><p class="foot-name">Damir Ashinov</p><p class="fine">A student project, not an official University of Arkansas study.</p></div>
+    <div class="foot-links">
+      <a class="icon-btn" href="https://www.linkedin.com/in/da0504" target="_blank" rel="noopener" aria-label="LinkedIn profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+      <a class="icon-btn" href="mailto:dashinov@uark.edu" aria-label="Email dashinov@uark.edu"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13A1.5 1.5 0 0 1 3.5 4zm.7 2L12 11.6 19.8 6H4.2zM20 7.7l-7.42 5.3a1 1 0 0 1-1.16 0L4 7.7V18h16V7.7z"/></svg></a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

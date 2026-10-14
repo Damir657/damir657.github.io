@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Damir Ashinov | Industrial Engineering</title>
+<meta name="description" content="Damir Ashinov, Industrial Engineering & Operations Analytics student at the University of Arkansas. Campus traffic data, parking optimization and logistics.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%239d2235'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'%3EDA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top"><span class="brand-mark">DA</span>Damir Ashinov</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#traffic">Traffic</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a>
+      <a class="nav-cta" href="assets/Damir-Ashinov-Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero wrap">
+  <div class="hero-text">
+    <img class="avatar" src="assets/headshot.jpg" alt="Damir Ashinov" width="132" height="132">
+    <p class="eyebrow">Industrial Engineering &amp; Operations Analytics · University of Arkansas · Class of 2028</p>
+    <h1 class="display">Damir<br>Ashinov</h1>
+    <p class="lede">I turn messy operational data into decisions: which truck goes where, which lot a commuter should park in, and when the roads into campus jam.</p>
+    <p class="sub">Right now that means campus parking. I built the dataset and the traffic logger behind two team projects this semester, and the map on this page runs on that data.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="assets/Damir-Ashinov-Resume.pdf" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Download résumé</a>
+      <a class="icon-btn" href="https://www.linkedin.com/in/da0504" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+      <a class="icon-btn" href="mailto:dashinov@uark.edu" aria-label="Email dashinov@uark.edu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13A1.5 1.5 0 0 1 3.5 4zm.7 2L12 11.6 19.8 6H4.2zM20 7.7l-7.42 5.3a1 1 0 0 1-1.16 0L4 7.7V18h16V7.7z"/></svg></a>
+    </div>
+  </div>
+
+  <figure class="demo" id="traffic" aria-labelledby="demo-title">
+    <div class="demo-head">
+      <h2 id="demo-title" class="demo-title">When do the roads into campus jam?</h2>
+      <p class="demo-note" id="demo-meta">Measured, not modeled: live TomTom speeds my logger records every 30 minutes.</p>
+    </div>
+    <div class="map-box">
+      <svg id="map" class="map" role="img" aria-label="Campus road map colored by congestion"></svg>
+      <div class="tip" id="tip" hidden></div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--t-free)"></i>Free flow</span>
+        <span><i style="background:var(--t-light)"></i>Light</span>
+        <span><i style="background:var(--t-slow)"></i>Slow</span>
+        <span><i style="background:var(--t-jam)"></i>Jammed</span>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="days" role="group" aria-label="Day of week" id="days"></div>
+      <div class="time-row">
+        <button class="play" id="play" type="button" aria-label="Play the day">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path id="play-icon" d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        </button>
+        <label class="sr" for="slot">Time of day</label>
+        <input type="range" id="slot" min="0" max="27" step="1" value="21">
+        <output id="clock" class="clock" for="slot">4:30 pm</output>
+      </div>
+    </div>
+    <p class="readout" id="readout" aria-live="polite"></p>
+    <div class="profile">
+      <div class="profile-head"><span id="profile-name">Road</span><span class="profile-sub">speed vs. normal, 6 am–7:30 pm</span></div>
+      <svg id="profile" class="profile-svg" viewBox="0 0 560 120" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+    <figcaption class="fine" id="caption">Click a road to see its whole day. Weekday averages, 6 am–7:30 pm.</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2">Projects</h2>
+      <p class="sec-sub">Fall 2026. Two team projects and the data work underneath them. Each one says what my part was.</p>
+    </div>
+    <div class="projects">
+      <article class="card card-wide">
+        <div class="card-media media-stats" aria-hidden="true">
+          <div class="stat"><b id="stat-readings">11,006</b><span>traffic readings</span></div>
+          <div class="stat"><b>12</b><span>roads, every 30 min</span></div>
+          <div class="stat"><b>103</b><span>ArDOT count stations, 1986–2025</span></div>
+        </div>
+        <div class="card-body">
+          <p class="tag">Data engineering · Python · GitHub Actions · TomTom API</p>
+          <h3 class="h3">Campus traffic logger</h3>
+          <p>No public source says how congestion around campus changes through the day, so I built one. Every 30 minutes a script records live speeds on 12 roads into campus, each placed on an Arkansas DOT count station so speeds line up with traffic volumes. It started on my laptop, then moved to a scheduled GitHub Actions job so it runs whether my laptop is open or not.</p>
+          <p class="mine"><b>My part:</b> designed and built the logger, picked and checked the 12 road points, and pulled 40 years of ArDOT counts. Its data drives the map above and HillPark's traffic forecast.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-media" href="hillpark.html"><img src="assets/hillpark-plan.jpg" alt="HillPark planning a week of parking for a class schedule" loading="lazy"></a>
+        <div class="card-body">
+          <p class="tag">INEG 22203 Computing Methods II · Team of 3</p>
+          <h3 class="h3"><a href="hillpark.html">HillPark</a></h3>
+          <p>A Java web app that tells a student where to park for their class schedule. An OR-Tools integer program picks the best lots for the week; a SMILE model forecasts traffic.</p>
+          <p class="mine"><b>My part:</b> the lot, permit and traffic data it runs on.</p>
+          <a class="more" href="hillpark.html">Read about HillPark →</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-media" href="permit-model.html"><img src="assets/campus-map.jpg" alt="Campus map with every parking lot shaded in UARK's permit colors" loading="lazy"></a>
+        <div class="card-body">
+          <p class="tag">INEG 26103 Operations Research · Team of 2</p>
+          <h3 class="h3"><a href="permit-model.html">Campus parking permit model</a></h3>
+          <p>UARK sells about 1.44 car permits per space. A mixed-integer model decides which permit each lot should serve, to shorten walks without sending everyone down the same road.</p>
+          <p class="mine"><b>My part:</b> the 110-lot dataset, the interactive campus map, and the data requests to Transit &amp; Parking.</p>
+          <a class="more" href="permit-model.html">Read about the model →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="experience">
+  <div class="wrap">
+    <div class="sec-head"><h2 class="h2">Experience</h2></div>
+    <article class="job">
+      <div class="job-side">
+        <p class="job-when">May – July 2025</p>
+        <p class="job-where">Marion, Arkansas</p>
+      </div>
+      <div class="job-main">
+        <h3 class="h3">Operations Analytics Intern · Merrimack Construction</h3>
+        <p>Ran the hauling logistics for a $1M construction project: which trucks carried what, when, and by which route.</p>
+        <div class="kpis">
+          <div class="kpi"><b>9</b><span>truck routes, ~30 loads a day</span></div>
+          <div class="kpi"><b>~15%</b><span>less truck idle time</span></div>
+          <div class="kpi"><b>500</b><span>deliveries tracked</span></div>
+          <div class="kpi"><b>~$3,500</b><span>in cost savings found</span></div>
+        </div>
+        <ul class="list">
+          <li>Analyzed routes and material quantities to cut idle time and keep loads moving.</li>
+          <li>Coordinated 9 drivers and 2 site supervisors so concrete, dirt and industrial materials arrived on schedule.</li>
+          <li>Kept delivery and fuel records in Excel, which is where the savings showed up.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="skills">
+  <div class="wrap">
+    <div class="sec-head"><h2 class="h2">Skills &amp; coursework</h2></div>
+    <div class="skills">
+      <div class="skill-col">
+        <h3 class="h4">Methods</h3>
+        <ul class="chips"><li>Linear &amp; integer programming</li><li>Facility location (p-median)</li><li>Logistics &amp; supply chain analytics</li><li>Process improvement</li><li>Cost analysis</li><li>Traffic &amp; time-series data</li></ul>
+      </div>
+      <div class="skill-col">
+        <h3 class="h4">Tools</h3>
+        <ul class="chips"><li>Java</li><li>R</li><li>JavaScript</li><li>AMPL</li><li>Excel</li><li>Power BI</li><li>REST APIs</li><li>Git &amp; GitHub Actions</li></ul>
+      </div>
+      <div class="skill-col">
+        <h3 class="h4">Languages &amp; activities</h3>
+        <ul class="chips"><li>English</li><li>Russian, fluent (state-certified)</li><li>IISE</li><li>Chess Club</li><li>Boxing Club</li></ul>
+      </div>
+    </div>
+    <div class="courses">
+      <div class="course"><p class="code">INEG 26103</p><p class="cname">Introduction to Operations Research</p><p class="cdesc">Linear and integer programming, modeling in AMPL with CPLEX.</p></div>
+      <div class="course"><p class="code">INEG 22203</p><p class="cname">Computing Methods for Industrial Engineers II</p><p class="cdesc">Object-oriented Java, Tablesaw, Smile machine learning, OR-Tools, Vaadin.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div>
+      <p class="foot-name">Damir Ashinov</p>
+      <p class="fine">Team projects are credited to their teams; AI assistance is documented in each course's AI-use log. Map data © OpenStreetMap contributors; traffic speeds from TomTom; counts from ArDOT.</p>
+    </div>
+    <div class="foot-links">
+      <a class="icon-btn" href="https://www.linkedin.com/in/da0504" target="_blank" rel="noopener" aria-label="LinkedIn profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+      <a class="icon-btn" href="mailto:dashinov@uark.edu" aria-label="Email dashinov@uark.edu"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13A1.5 1.5 0 0 1 3.5 4zm.7 2L12 11.6 19.8 6H4.2zM20 7.7l-7.42 5.3a1 1 0 0 1-1.16 0L4 7.7V18h16V7.7z"/></svg></a>
+      <a class="btn btn-ghost" href="assets/Damir-Ashinov-Resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+    </div>
+  </div>
+</footer>
+
+<script src="traffic.js"></script>
+</body>
+</html>
